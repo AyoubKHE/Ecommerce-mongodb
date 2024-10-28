@@ -119,7 +119,7 @@ paths:
           schema:
             type: string
       responses:
-        "201":
+        "200":
           description: User's email has been successfully verified!
         "400":
           description: |
@@ -135,3 +135,38 @@ paths:
             - Internal server error.
             - An error occurred while accessing the database. Please try again later.
   #!_______________________________________________________________________________________________________
+
+  /users/send-email-verification-link:
+    post:
+      description: Send email verification link to user email.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "jean.dupont@example.com"
+      responses:
+        "200":
+          description: The confirmation link has been sent to the user email. The confirmation link is valid for 15 minutes only.
+        "404":
+          description: User not found.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+            - Unable to send the confirmation email. Please check the user email address and try again.

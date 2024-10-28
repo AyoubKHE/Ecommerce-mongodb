@@ -2,8 +2,6 @@
 
 namespace App\Http\Requests\Users;
 
-use App\Models\SystemPermission;
-use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class FirstAdminRegistrationRequest extends FormRequest

@@ -13,3 +13,9 @@ Route::get(
     [UserController::class, 'emailVerification']
 )
     ->name('users.email-verification');
+
+Route::post(
+    '/users/send-email-verification-link',
+    [UserController::class, 'sendEmailVerificationLink']
+)
+    ->name('users.send-email-verification-link');
