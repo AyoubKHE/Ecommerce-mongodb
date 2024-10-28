@@ -7,13 +7,12 @@ use App\Models\User;
 use MongoDB\BSON\ObjectId;
 use App\Services\JWTService;
 use Illuminate\Http\JsonResponse;
-use App\Http\Requests\Users\FirstAdminRegistrationRequest;
 use Illuminate\Support\Facades\DB;
 use App\Mail\UserEmailConfirmation;
 use Illuminate\Support\Facades\Hash;
-// use MongoDB\Laravel\Eloquent\Casts\ObjectId;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\Users\FirstAdminRegistrationRequest;
 
 class clsFirstAdminRegistration
 {
@@ -27,7 +26,6 @@ class clsFirstAdminRegistration
     {
         $emailVerificationTokenPayload = [
             "iat" => time(),
-            "nbf" => time(),
             "exp" => time() + 900, // 15 minutes
             "userData" => array(
                 "userId" => $this->user['_id']->__toString(),
@@ -49,7 +47,7 @@ class clsFirstAdminRegistration
 
         $this->user['password'] = Hash::make($this->user['password']);
 
-        $this->user['isActive'] = false;
+        $this->user['isActive'] = true;
 
         $this->prepareEmailVerificationToken();
 

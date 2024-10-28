@@ -103,3 +103,35 @@ paths:
             - An error occurred while accessing the database. Please try again later.
             - An error occurred while saving the user's profile image.
             - Unable to send the confirmation email. Please check the user email address and try again.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/email-verification/{emailVerificationToken}:
+    get:
+      description: Verification of user email.
+      tags:
+        - Users
+      parameters:
+        - name: emailVerificationToken
+          in: path
+          required: true
+          description: The email verification token sent to the user's email address.
+          schema:
+            type: string
+      responses:
+        "201":
+          description: User's email has been successfully verified!
+        "400":
+          description: |
+            Bad Request:
+            - The verification token has expired.
+            - The verification token is invalid.
+            - The user email already verified.
+        "404":
+          description: User not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+  #!_______________________________________________________________________________________________________
