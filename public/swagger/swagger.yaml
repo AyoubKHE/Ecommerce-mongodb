@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: API Documentation
+  version: 1.0.0
+
+paths:
+  /api/users/first-admin-register:
+    post:
+      description: First admin registration.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - username
+                - email
+                - password
+                - phone
+                - birthDate
+                - profileImage
+              properties:
+                firstName:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "Jean"
+                lastName:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "Dupont"
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "jeandupont"
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "jean.dupont@example.com"
+                password:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                  example: "Password123!"
+                phone:
+                  type: string
+                  example: "0612345678"
+                address:
+                  type: object
+                  required:
+                    - city
+                    - zip
+                    - streetNumber
+                    - addressLine
+                  properties:
+                    city:
+                      type: string
+                      minLength: 2
+                      maxLength: 100
+                      example: "Paris"
+                    zip:
+                      type: string
+                      minLength: 5
+                      maxLength: 5
+                      example: "75001"
+                    streetNumber:
+                      type: string
+                      example: "15"
+                    addressLine:
+                      type: string
+                      maxLength: 255
+                      example: "Rue de Rivoli"
+                birthDate:
+                  type: string
+                  format: date
+                  example: "1990-01-01"
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
+        "403":
+          description: |
+            Unauthorized:
+            - Access denied. Only the first admin can register through this endpoint.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+            - An error occurred while saving the user's profile image.
+            - Unable to send the confirmation email. Please check the user email address and try again.
