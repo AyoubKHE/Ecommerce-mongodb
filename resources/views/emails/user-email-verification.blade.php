@@ -75,7 +75,7 @@
             <p>Bonjour {{ $firstName }},</p>
             <p>Merci de vous être inscrit sur notre site Eleganza. Veuillez confirmer votre adresse email en
                 cliquant sur le bouton ci-dessous :</p>
-            <a href="{{ route("users.email-verification", $emailVerificationToken) }}" class="my_button">Confirmer mon email</a>
+            <a href="{{ route("users.user-email-verification", $emailVerificationToken) }}" class="my_button">Confirmer mon email</a>
             <p>Si vous n'avez pas créé de compte sur notre site, veuillez ignorer cet email.</p>
         </div>
         <div class="footer">

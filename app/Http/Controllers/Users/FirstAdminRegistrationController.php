@@ -1,5 +1,8 @@
 <?php
-namespace App\Services\Users;
+
+namespace App\Http\Controllers\Users;
+
+use App\Http\Controllers\Controller;
 
 use Exception;
 use Throwable;
@@ -8,16 +11,17 @@ use MongoDB\BSON\ObjectId;
 use App\Services\JWTService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use App\Mail\UserEmailConfirmation;
+use App\Mail\UserEmailVerification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Users\FirstAdminRegistrationRequest;
 
-class clsFirstAdminRegistration
+class FirstAdminRegistrationController extends Controller
 {
     private FirstAdminRegistrationRequest $globalRequestObject;
     private array $user;
+    private User $storedUser;
     private bool $isUserImageFolderCreated = false;
     private string $emailVerificationToken;
 
@@ -90,7 +94,7 @@ class clsFirstAdminRegistration
     private function storeUser(): void
     {
         try {
-            User::create($this->user);
+            $this->storedUser = User::create($this->user);
 
         } catch (Throwable $throwable) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
@@ -100,7 +104,7 @@ class clsFirstAdminRegistration
     private function sendEmailVerificationLink(): void
     {
         try {
-            Mail::to($this->user['email'])->send(new UserEmailConfirmation($this->user['firstName'], $this->emailVerificationToken));
+            Mail::to($this->user['email'])->send(new UserEmailVerification($this->user['firstName'], $this->emailVerificationToken));
         } catch (Throwable $throwable) {
             throw new Exception('Unable to send the confirmation email. Please check the user email address and try again.', 500);
         }
@@ -119,7 +123,8 @@ class clsFirstAdminRegistration
         }
     }
 
-    public function main(FirstAdminRegistrationRequest $request): JsonResponse
+
+    public function __invoke(FirstAdminRegistrationRequest $request): JsonResponse
     {
         $this->globalRequestObject = $request;
 
@@ -139,7 +144,8 @@ class clsFirstAdminRegistration
             });
 
             return response()->json([
-                'message' => 'User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.'
+                'message' => 'User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.',
+                'user' => $this->storedUser,
             ], 201);
 
         } catch (Throwable $throwable) {

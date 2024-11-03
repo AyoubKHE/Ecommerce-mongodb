@@ -4,7 +4,7 @@ info:
   version: 1.0.0
 
 paths:
-  /api/users/first-admin-register:
+  /api/users/first-admin-registration:
     post:
       description: First admin registration.
       tags:
@@ -106,7 +106,7 @@ paths:
 
   #!_______________________________________________________________________________________________________
 
-  /api/users/email-verification/{emailVerificationToken}:
+  /api/users/user-email-verification/{emailVerificationToken}:
     get:
       description: Verification of user email.
       tags:

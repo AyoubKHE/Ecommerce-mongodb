@@ -1,21 +1,25 @@
 <?php
 
+use App\Http\Controllers\Users\FirstAdminRegistrationController;
+use App\Http\Controllers\Users\SendEmailVerificationLinkController;
+use App\Http\Controllers\Users\UserEmailVerificationController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 Route::post(
-    '/users/first-admin-register',
-    [UserController::class, 'firstAdminRegistration']
-);
+    '/users/first-admin-registration',
+    FirstAdminRegistrationController::class
+)
+    ->name('users.first-admin-registration');
+
 
 Route::get(
-    '/users/email-verification/{emailVerificationToken}',
-    [UserController::class, 'emailVerification']
+    '/users/user-email-verification/{emailVerificationToken}',
+    UserEmailVerificationController::class
 )
-    ->name('users.email-verification');
+    ->name('users.user-email-verification');
 
 Route::post(
     '/users/send-email-verification-link',
-    [UserController::class, 'sendEmailVerificationLink']
+    SendEmailVerificationLinkController::class
 )
     ->name('users.send-email-verification-link');

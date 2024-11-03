@@ -1,5 +1,8 @@
 <?php
-namespace App\Services\Users;
+
+namespace App\Http\Controllers\Users;
+
+use App\Http\Controllers\Controller;
 
 use Exception;
 use Throwable;
@@ -7,13 +10,14 @@ use App\Models\User;
 use App\Services\JWTService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
-use App\Mail\UserEmailConfirmation;
+use App\Mail\UserEmailVerification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\Users\sendEmailVerificationLinkRequest;
 
-class clsSendEmailVerificationLink
+class SendEmailVerificationLinkController extends Controller
 {
+
     private sendEmailVerificationLinkRequest $globalRequestObject;
     private User $user;
     private string $emailVerificationToken;
@@ -51,7 +55,7 @@ class clsSendEmailVerificationLink
     private function sendEmailVerificationLink(): void
     {
         try {
-            Mail::to($this->user->email)->send(new UserEmailConfirmation($this->user->firstName, $this->emailVerificationToken));
+            Mail::to($this->user->email)->send(new UserEmailVerification($this->user->firstName, $this->emailVerificationToken));
         } catch (Throwable $throwable) {
             throw new Exception('Unable to send the confirmation email. Please check the user email address and try again.', 500);
         }
@@ -70,8 +74,9 @@ class clsSendEmailVerificationLink
             throw new Exception('User not found', 404);
         }
     }
+    
 
-    public function main(sendEmailVerificationLinkRequest $request): JsonResponse
+    public function __invoke(sendEmailVerificationLinkRequest $request)
     {
         $this->globalRequestObject = $request;
 

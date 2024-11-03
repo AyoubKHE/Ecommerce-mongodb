@@ -1,5 +1,8 @@
 <?php
-namespace App\Services\Users;
+
+namespace App\Http\Controllers\Users;
+
+use App\Http\Controllers\Controller;
 
 use Exception;
 use Throwable;
@@ -8,8 +11,9 @@ use App\Services\JWTService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
-class clsEmailVerification
+class UserEmailVerificationController extends Controller
 {
+
     private User|null $user;
     private string $emailVerificationToken;
 
@@ -74,7 +78,7 @@ class clsEmailVerification
 
     }
 
-    public function main(string $emailVerificationToken): JsonResponse
+    public function __invoke(string $emailVerificationToken)
     {
         $this->emailVerificationToken = $emailVerificationToken;
 
@@ -85,6 +89,5 @@ class clsEmailVerification
         return response()->json([
             'message' => "User's email has been successfully verified!"
         ], 200);
-
     }
 }
