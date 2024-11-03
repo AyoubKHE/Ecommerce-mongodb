@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation d'email</title>
+    <title>Réinitialisation de mot de passe</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,14 +69,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Confirmation d'inscription</h1>
+            <h1>Réinitialisation de mot de passe</h1>
         </div>
         <div class="content">
             <p>Bonjour {{ $firstName }},</p>
-            <p>Merci de vous être inscrit sur notre site Eleganza. Veuillez confirmer votre adresse email en
-                cliquant sur le bouton ci-dessous :</p>
-            <a href="{{ route("users.email-verification", $emailVerificationToken) }}" class="my_button">Confirmer mon email</a>
-            <p>Si vous n'avez pas créé de compte sur notre site, veuillez ignorer cet email.</p>
+            <p>Vous avez demandé la réinitialisation de votre mot de passe sur notre site Eleganza. Pour réinitialiser votre mot de passe, veuillez cliquer sur le bouton ci-dessous :</p>
+            <a href="https://Eleganza/reset-password?passwordResetToken={{ $passwordResetToken }}" class="my_button">Réinitialiser mon mot de passe</a>
+            <p>Si vous n'avez pas fait cette demande, veuillez ignorer cet email.</p>
         </div>
         <div class="footer">
             <p>© 2024 Eleganza. Tous droits réservés.</p>

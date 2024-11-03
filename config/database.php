@@ -41,6 +41,12 @@ return [
             'database' => 'ecommerce',
         ],
 
+        'mongodb_testing' => [
+            'driver' => 'mongodb',
+            'dsn' => env('MONGODB_URI_TEST'),
+            'database' => 'ecommerce-test',
+        ],
+
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DATABASE_URL'),

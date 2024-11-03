@@ -76,7 +76,7 @@ class SendEmailVerificationLinkController extends Controller
     }
     
 
-    public function __invoke(sendEmailVerificationLinkRequest $request)
+    public function __invoke(sendEmailVerificationLinkRequest $request): JsonResponse
     {
         $this->globalRequestObject = $request;
 

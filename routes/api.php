@@ -12,5 +12,5 @@ use App\Models\User;
 |
 */
 
-require __DIR__ . '/ApiRoutes/users.route.php';
+require __DIR__ . '/ApiRoutes/UsersRoute.php';
 

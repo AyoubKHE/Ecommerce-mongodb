@@ -16,8 +16,6 @@ class User extends Model
     const UPDATED_AT = 'updatedAt';
     const DELETED_AT = 'deletedAt';
 
-    // protected $connection = 'mongodb';
-
     protected $table = 'users';
 
     protected $fillable = [
@@ -45,6 +43,7 @@ class User extends Model
     ];
 
     protected $hidden = [
+        "_id",
         "password",
         "emailVerificationToken",
         "passwordResetToken",

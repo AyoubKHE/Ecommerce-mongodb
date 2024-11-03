@@ -9,8 +9,6 @@ class SystemPermission extends Model
 {
     use HasFactory;
 
-    protected $connection = 'mongodb';
-
     protected $table = 'systemPermissions';
 
     public $timestamps = false;
