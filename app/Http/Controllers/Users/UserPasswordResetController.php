@@ -10,16 +10,20 @@ use App\Models\User;
 use App\Services\JWTService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\Users\UserResetPasswordRequest;
 
-class UserEmailVerificationController extends Controller
+class UserPasswordResetController extends Controller
 {
 
+    private UserResetPasswordRequest $globalRequestObject;
     private User|null $user;
-    private string $emailVerificationToken;
 
     private function updateUserDocumentInDatabase()
     {
-        $this->user->emailVerificationToken = null;
+        $this->user->password = Hash::make(
+            $this->globalRequestObject->input("newPassword")
+        );
+        $this->user->passwordResetToken = null;
         $this->updatedAt = now();
 
         try {
@@ -33,22 +37,24 @@ class UserEmailVerificationController extends Controller
         }
     }
 
-    private function emailVerificationTokenValidation()
+    private function passwordResetTokenValidation()
     {
         try {
-            $emailVerificationTokenPayload = JWTService::checkTokenValidity($this->emailVerificationToken);
+            $passwordResetTokenPayload = JWTService::checkTokenValidity(
+                $this->globalRequestObject->input("passwordResetToken")
+            );
 
         } catch (Exception $e) {
             if (get_class($e) === "Firebase\JWT\ExpiredException") {
-                throw new Exception("The verification token has expired.", 400);
+                throw new Exception("The password reset token has expired.", 400);
 
             } else {
-                throw new Exception("The verification token is invalid.", 400);
+                throw new Exception("The password reset token is invalid.", 400);
             }
         }
 
         try {
-            $this->user = User::where("id", $emailVerificationTokenPayload["userData"]->userId)->first();
+            $this->user = User::where("id", $passwordResetTokenPayload["userData"]->userId)->first();
 
         } catch (Throwable $throwable) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
@@ -58,8 +64,8 @@ class UserEmailVerificationController extends Controller
             throw new Exception('User not found', 404);
         }
 
-        if (!$this->user->emailVerificationToken) {
-            throw new Exception('The user email already verified.', 400);
+        if (!$this->user->passwordResetToken) {
+            throw new Exception('The user has not requested a token to reset the password.', 400);
         }
 
         //! Cette vérification protège notre système en empêchant les entités non autorisées de générer des tokens de validation, même si elles ont accès à 'JWT_SECRET'. 
@@ -72,22 +78,27 @@ class UserEmailVerificationController extends Controller
         //! donc le token sera different.
         //! donc ce check est logique car sans lui je peux générer un token valide et je passe. meme si il est
         //! different de celui envoyé mais il reste un token générer pas le "JWT_SECRET" donc il est valide.
-        if (!Hash::check($this->emailVerificationToken, $this->user->emailVerificationToken)) {
-            throw new Exception("The verification token is invalid.", 400);
+        if (
+            !Hash::check(
+                $this->globalRequestObject->input("passwordResetToken"),
+                $this->user->passwordResetToken
+            )
+        ) {
+            throw new Exception("The password reset token is invalid.", 400);
         }
 
     }
 
-    public function __invoke(string $emailVerificationToken): JsonResponse
+    public function __invoke(UserResetPasswordRequest $request): JsonResponse
     {
-        $this->emailVerificationToken = $emailVerificationToken;
+        $this->globalRequestObject = $request;
 
-        $this->emailVerificationTokenValidation();
+        $this->passwordResetTokenValidation();
 
         $this->updateUserDocumentInDatabase();
 
         return response()->json([
-            'message' => "User's email has been successfully verified!"
+            'message' => "User's password has been reset successfully!"
         ], 200);
     }
 }

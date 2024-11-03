@@ -47,7 +47,7 @@ paths:
                   example: "jean.dupont@example.com"
                 password:
                   type: string
-                  minLength: 1
+                  minLength: 8
                   maxLength: 50
                   example: "Password123!"
                 phone:
@@ -136,7 +136,7 @@ paths:
             - An error occurred while accessing the database. Please try again later.
 
   #!_______________________________________________________________________________________________________
-  
+
   /api/users/send-email-verification-link:
     post:
       description: Send email verification link to user email.
@@ -173,7 +173,7 @@ paths:
             - Unable to send the confirmation email. Please check the user email address and try again.
 
   #!_______________________________________________________________________________________________________
-  
+
   /api/users/forget-password:
     post:
       description: Send password reset link to user email.
@@ -208,3 +208,48 @@ paths:
             - Internal server error.
             - An error occurred while accessing the database. Please try again later.
             - Unable to send the password reset link. Please check the user email address and try again.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/reset-password:
+    post:
+      description: Reset user's password.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - passwordResetToken
+                - newPassword
+              properties:
+                passwordResetToken:
+                  type: string
+                newPassword:
+                  type: string
+                  minLength: 8
+                  maxLength: 50
+                  example: "Password123!"
+      responses:
+        "200":
+          description: User's password has been reset successfully!
+        "400":
+          description: |
+            Bad Request:
+            - The password reset token has expired.
+            - The password reset token is invalid
+            - The user has not requested a token to reset the password.
+        "404":
+          description: User not found.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
