@@ -90,7 +90,7 @@ paths:
           description: User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
         "403":
           description: |
-            Unauthorized:
+            Forbidden:
             - Access denied. Only the first admin can register through this endpoint.
         "422":
           description: |
@@ -103,6 +103,55 @@ paths:
             - An error occurred while accessing the database. Please try again later.
             - An error occurred while saving the user's profile image.
             - Unable to send the confirmation email. Please check the user email address and try again.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/login:
+      post:
+        description: User login.
+        tags:
+          - Users
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - email
+                  - password
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 255
+                    example: "jean.dupont@example.com"
+                  password:
+                    type: string
+                    minLength: 8
+                    maxLength: 50
+                    example: "Password123!"
+        responses:
+          "200":
+            description: User logged in successfully! Access and refresh tokens are included in the response.
+          "401":
+            description: Invalid email or password.
+          "403":
+            description: |
+              Forbidden:
+              - The account has been suspended.
+              - The email address has not been verified.
+              - A password reset request has been made, but it hasn't been finalized.
+              - The user is already logged in.
+          "422":
+            description: |
+              Unprocessable Content - The provided inputs failed validation.  
+              Please ensure all required fields are correctly filled and meet the validation criteria.
+          "500":
+            description: |
+              Internal server error:
+              - Internal server error.
+              - An error occurred while accessing the database. Please try again later.
 
   #!_______________________________________________________________________________________________________
 

@@ -45,9 +45,12 @@ class UserForgetPasswordController extends Controller
         $this->preparePasswordResetToken();
 
         try {
-            $this->user->save();
-
+            $updated = $this->user->save();
         } catch (Throwable $throwable) {
+            throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
+        }
+
+        if (!$updated) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
     }
