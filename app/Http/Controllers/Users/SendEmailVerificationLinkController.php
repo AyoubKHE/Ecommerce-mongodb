@@ -19,7 +19,7 @@ class SendEmailVerificationLinkController extends Controller
 {
 
     private sendEmailVerificationLinkRequest $globalRequestObject;
-    private User $user;
+    private User|null $user;
     private string $emailVerificationToken;
 
 

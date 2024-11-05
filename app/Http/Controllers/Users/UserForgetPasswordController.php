@@ -19,7 +19,7 @@ class UserForgetPasswordController extends Controller
 {
 
     private UserForgetPasswordRequest $globalRequestObject;
-    private User $user;
+    private User|null $user;
     private string $passwordResetToken;
 
 

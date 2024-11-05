@@ -21,7 +21,7 @@ class FirstAdminRegistrationController extends Controller
 {
     private FirstAdminRegistrationRequest $globalRequestObject;
     private array $user;
-    private User $storedUser;
+    private User|null $storedUser;
     private bool $isUserImageFolderCreated = false;
     private string $emailVerificationToken;
 
@@ -97,6 +97,10 @@ class FirstAdminRegistrationController extends Controller
             $this->storedUser = User::create($this->user);
 
         } catch (Throwable $throwable) {
+            throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
+        }
+
+        if (!$this->storedUser) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
     }

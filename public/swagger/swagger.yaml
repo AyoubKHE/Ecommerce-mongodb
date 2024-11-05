@@ -3,6 +3,13 @@ info:
   title: API Documentation
   version: 1.0.0
 
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
 paths:
   /api/users/first-admin-registration:
     post:
@@ -152,6 +159,139 @@ paths:
               Internal server error:
               - Internal server error.
               - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/create:
+    post:
+      description: Allows an admin or any authorized user to create a new user account.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - firstName
+                - lastName
+                - username
+                - email
+                - password
+                - phone
+                - birthDate
+                - profileImage
+                - role
+              properties:
+                firstName:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "Jean"
+                lastName:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "Dupont"
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 30
+                  example: "jeandupont"
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "jean.dupont@example.com"
+                password:
+                  type: string
+                  minLength: 1
+                  maxLength: 50
+                  example: "Password123!"
+                phone:
+                  type: string
+                  example: "0612345678"
+                address:
+                  type: object
+                  required:
+                    - city
+                    - zip
+                    - streetNumber
+                    - addressLine
+                  properties:
+                    city:
+                      type: string
+                      minLength: 2
+                      maxLength: 100
+                      example: "Paris"
+                    zip:
+                      type: string
+                      minLength: 5
+                      maxLength: 5
+                      example: "75001"
+                    streetNumber:
+                      type: string
+                      example: "15"
+                    addressLine:
+                      type: string
+                      maxLength: 255
+                      example: "Rue de Rivoli"
+                birthDate:
+                  type: string
+                  format: date
+                  example: "1990-01-01"
+                profileImage:
+                  type: string
+                  format: binary
+                role:
+                  type: string
+                  enum: ["Admin", "User"]
+                  example: "User"
+                permissions:
+                  description: Permissions are required when role is "User"
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - value
+                    properties:
+                      name:
+                        type: string
+                        example: "read"
+                      value:
+                        type: integer
+                        example: 1
+      responses:
+        "201":
+          description: User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized
+            - The access token has expired.
+            - The access token is invalid.
+        "403":
+          description: |
+            Forbidden:
+            - Access denied: You do not have the necessary permissions to perform this action.
+        "404":
+          description: Logged in user not found.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+            - An error occurred while saving the user's profile image.
+            - Unable to send the confirmation email. Please check the user email address and try again.
 
   #!_______________________________________________________________________________________________________
 
