@@ -30,7 +30,7 @@ class JWTAuthentication
 
             $accessTokenPayload = JWTService::checkTokenValidity($accessToken);
 
-            $request->attributes->set('userId', $accessTokenPayload["userData"]->userId);
+            $request->attributes->set('loggedInUserId', $accessTokenPayload["userData"]->userId);
 
         } catch (Exception $e) {
             if (get_class($e) === "Firebase\JWT\ExpiredException") {

@@ -154,7 +154,7 @@ class UserCreationController extends Controller
         try {
             $this->loggedInUser = User::where(
                 "id",
-                $this->globalRequestObject->get('userId')
+                $this->globalRequestObject->get('loggedInUserId')
             )->first();
 
         } catch (Throwable $throwable) {

@@ -339,6 +339,43 @@ paths:
 
   #!_______________________________________________________________________________________________________
 
+  /api/users/get-by-id/{userId}:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Get user data by Id.
+      parameters:
+        - in : params
+          name: userId
+          schema:
+            type: string
+          description: User's Id (Required)
+      responses:
+        '200':
+          description: Successful response with user's data.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized
+            - The access token has expired.
+            - The access token is invalid.
+        "403":
+          description: |
+            Forbidden:
+            - Access denied: You do not have the necessary permissions to perform this action.
+        "404":
+          description: Logged in user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
   /api/users/email-verification/{emailVerificationToken}:
     get:
       description: Verification of user email.
