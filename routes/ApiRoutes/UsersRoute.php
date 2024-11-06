@@ -1,11 +1,13 @@
 <?php
 
 
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Users\FirstAdminRegistrationController;
 use App\Http\Controllers\Users\UserLoginController;
 use App\Http\Controllers\Users\UserCreationController;
+use App\Http\Controllers\Users\GetPaginatedUsersController;
 use App\Http\Controllers\Users\SendEmailVerificationLinkController;
 use App\Http\Controllers\Users\UserEmailVerificationController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
@@ -30,6 +32,14 @@ Route::post(
     UserCreationController::class
 )
     ->name('users.create')
+    ->middleware('JWTAuth');
+
+
+Route::get(
+    '/users/get-paginated-users',
+    GetPaginatedUsersController::class
+)
+    ->name('users.get-paginated-users')
     ->middleware('JWTAuth');
 
 

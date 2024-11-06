@@ -295,6 +295,50 @@ paths:
 
   #!_______________________________________________________________________________________________________
 
+  /api/users/get-paginated-users:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Get users list with optional pagination.
+      parameters:
+        - name: page
+          in: query
+          description: The page number for pagination (default is 1).
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: The number of items per page (default is 10).
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response with a list of paginated users.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized
+            - The access token has expired.
+            - The access token is invalid.
+        "403":
+          description: |
+            Forbidden:
+            - Access denied: You do not have the necessary permissions to perform this action.
+        "404":
+          description: Logged in user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
   /api/users/email-verification/{emailVerificationToken}:
     get:
       description: Verification of user email.
