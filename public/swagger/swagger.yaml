@@ -272,7 +272,7 @@ paths:
           description: Authorization token is missing or invalid format.
         "401":
           description: |
-            Unauthorized
+            Unauthorized:
             - The access token has expired.
             - The access token is invalid.
         "403":
@@ -322,7 +322,7 @@ paths:
           description: Authorization token is missing or invalid format.
         "401":
           description: |
-            Unauthorized
+            Unauthorized:
             - The access token has expired.
             - The access token is invalid.
         "403":
@@ -359,7 +359,7 @@ paths:
           description: Authorization token is missing or invalid format.
         "401":
           description: |
-            Unauthorized
+            Unauthorized:
             - The access token has expired.
             - The access token is invalid.
         "403":
@@ -367,7 +367,10 @@ paths:
             Forbidden:
             - Access denied: You do not have the necessary permissions to perform this action.
         "404":
-          description: Logged in user not found.
+          description: |
+            Not Found: 
+            - Logged in user not found.
+            - Requested user not found.
         "500":
           description: |
             Internal server error:

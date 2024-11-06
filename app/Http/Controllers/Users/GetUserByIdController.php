@@ -20,10 +20,19 @@ class GetUserByIdController extends Controller
             "id",
             $this->globalRequestObject->userId
         )->first();
+
+        if (!$this->requestedUser) {
+            throw new Exception('Requested user not found.', 404);
+        }
     }
 
     private function checkLoggedInUserPermissions()
     {
+
+        if ($this->loggedInUser->id === $this->globalRequestObject->userId) {
+            return;
+        }
+
         if ($this->loggedInUser->role === "Admin") {
             return;
         }
