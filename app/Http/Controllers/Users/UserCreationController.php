@@ -19,7 +19,6 @@ use App\Http\Requests\Users\UserCreationRequest;
 class UserCreationController extends Controller
 {
     private UserCreationRequest $globalRequestObject;
-    private User|null $loggedInUser;
     private array $preparedUser;
     private User|null $storedUser;
     private bool $isUserImageFolderCreated = false;
@@ -46,16 +45,18 @@ class UserCreationController extends Controller
 
     private function prepareCreatedBy()
     {
+        $loggedInUser = $this->globalRequestObject->get('loggedInUser');
+
         $this->preparedUser['createdBy'] = [
-            "id" => new ObjectId($this->loggedInUser->id),
-            "firstName" => $this->loggedInUser->firstName,
-            "lastName" => $this->loggedInUser->lastName,
-            "username" => $this->loggedInUser->username,
-            "email" => $this->loggedInUser->email,
-            "role" => $this->loggedInUser->role,
-            "permissions" => $this->loggedInUser->role === "Admin"
+            "id" => new ObjectId($loggedInUser->id),
+            "firstName" => $loggedInUser->firstName,
+            "lastName" => $loggedInUser->lastName,
+            "username" => $loggedInUser->username,
+            "email" => $loggedInUser->email,
+            "role" => $loggedInUser->role,
+            "permissions" => $loggedInUser->role === "Admin"
                 ? null
-                : $this->loggedInUser->permissions
+                : $loggedInUser->permissions
         ];
     }
 
@@ -129,50 +130,9 @@ class UserCreationController extends Controller
         }
     }
 
-    private function checkLoggedInUserPermissions()
-    {
-        if ($this->loggedInUser->role === "Admin") {
-            return;
-        }
-
-        foreach ($this->loggedInUser->permissions as $permission) {
-            if ($permission['name'] === 'Utilisateurs') {
-                if ((int) $permission['value'] === -1 || ((int) $permission['value'] & 2) === 2) {
-                    return;
-                } else {
-                    throw new Exception(
-                        "Access denied: You do not have the necessary permissions to perform this action.",
-                        403
-                    );
-                }
-            }
-        }
-    }
-
-    private function loadLoggedInUserFromDatabase()
-    {
-        try {
-            $this->loggedInUser = User::where(
-                "id",
-                $this->globalRequestObject->get('loggedInUserId')
-            )->first();
-
-        } catch (Throwable $throwable) {
-            throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
-        }
-
-        if (!$this->loggedInUser) {
-            throw new Exception('Logged in user not found.', 404);
-        }
-    }
-
     public function __invoke(UserCreationRequest $request): JsonResponse
     {
         $this->globalRequestObject = $request;
-
-        $this->loadLoggedInUserFromDatabase();
-
-        $this->checkLoggedInUserPermissions();
 
         $this->preparingData();
 

@@ -67,7 +67,7 @@ class UserLoginController extends Controller
     {
         if (!$this->user->isActive) {
             throw new Exception(
-                "The account has been suspended.",
+                "The logged in user has been suspended.",
                 403
             );
         }

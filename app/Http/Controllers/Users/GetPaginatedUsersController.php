@@ -13,7 +13,6 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class GetPaginatedUsersController extends Controller
 {
     private Request $globalRequestObject;
-    private User|null $loggedInUser;
     private LengthAwarePaginator $paginatedUsers;
     // private Collection $paginatedUsers;
 
@@ -45,50 +44,9 @@ class GetPaginatedUsersController extends Controller
         // $this->paginatedUsers = User::all();
     }
 
-    private function checkLoggedInUserPermissions()
-    {
-        if ($this->loggedInUser->role === "Admin") {
-            return;
-        }
-
-        foreach ($this->loggedInUser->permissions as $permission) {
-            if ($permission['name'] === 'Utilisateurs') {
-                if ((int) $permission['value'] === -1 || ((int) $permission['value'] & 1) === 1) {
-                    return;
-                } else {
-                    throw new Exception(
-                        "Access denied: You do not have the necessary permissions to perform this action.",
-                        403
-                    );
-                }
-            }
-        }
-    }
-
-    private function loadLoggedInUserFromDatabase()
-    {
-        try {
-            $this->loggedInUser = User::where(
-                "id",
-                $this->globalRequestObject->get('loggedInUserId')
-            )->first();
-
-        } catch (Throwable $throwable) {
-            throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
-        }
-
-        if (!$this->loggedInUser) {
-            throw new Exception('Logged in user not found.', 404);
-        }
-    }
-
     public function __invoke(Request $request)
     {
         $this->globalRequestObject = $request;
-
-        $this->loadLoggedInUserFromDatabase();
-
-        $this->checkLoggedInUserPermissions();
 
         $this->preparePaginatedUsers();
 

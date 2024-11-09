@@ -32,7 +32,8 @@ Route::post(
     UserCreationController::class
 )
     ->name('users.create')
-    ->middleware('JWTAuth');
+    ->middleware('JWTAuth')
+    ->middleware('CheckAuthorization:users');
 
 
 Route::get(
@@ -40,7 +41,8 @@ Route::get(
     GetPaginatedUsersController::class
 )
     ->name('users.get-paginated-users')
-    ->middleware('JWTAuth');
+    ->middleware('JWTAuth')
+    ->middleware('CheckAuthorization:users');
 
 
 Route::get(
@@ -48,7 +50,8 @@ Route::get(
     GetUserByIdController::class
 )
     ->name('users.get-by-id')
-    ->middleware('JWTAuth');
+    ->middleware('JWTAuth')
+    ->middleware('CheckAuthorization:users');
 
 
 Route::get(

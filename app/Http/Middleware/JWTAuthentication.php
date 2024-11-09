@@ -2,14 +2,40 @@
 
 namespace App\Http\Middleware;
 
+use Throwable;
 use Closure;
 use Exception;
+
+use App\Models\User;
 use App\Services\JWTService;
 use Illuminate\Http\Request;
 
 
 class JWTAuthentication
 {
+    private Request $globalRequestObject;
+    private string $loggedInUserId;
+
+    private function loadLoggedInUser()
+    {
+        try {
+            $loggedInUser = User::where("id", $this->loggedInUserId)->first();
+
+        } catch (Throwable $throwable) {
+            throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
+        }
+
+        if (!$loggedInUser) {
+            throw new Exception('Logged in user not found.', 404);
+        }
+
+        if (!$loggedInUser->isActive) {
+            throw new Exception("The logged in user has been suspended.", 403);
+        }
+
+        $this->globalRequestObject->attributes->set('loggedInUser', $loggedInUser);
+    }
+
     /**
      * Handle an incoming request.
      *
@@ -30,16 +56,20 @@ class JWTAuthentication
 
             $accessTokenPayload = JWTService::checkTokenValidity($accessToken);
 
-            $request->attributes->set('loggedInUserId', $accessTokenPayload["userData"]->userId);
-
         } catch (Exception $e) {
             if (get_class($e) === "Firebase\JWT\ExpiredException") {
-                throw new Exception("The access token has expired.", 401);
+                throw new Exception("The access token has expired. Please request a new access token using the refresh token.", 401);
 
             } else {
-                throw new Exception("The access token is invalid.", 401);
+                throw new Exception("The access token is invalid. Authentication required.", 401);
             }
         }
+
+        $this->loggedInUserId = $accessTokenPayload["userData"]->userId;
+
+        $this->globalRequestObject = $request;
+
+        $this->loadLoggedInUser();
 
         return $next($request);
     }

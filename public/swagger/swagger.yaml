@@ -114,51 +114,51 @@ paths:
   #!_______________________________________________________________________________________________________
 
   /api/users/login:
-      post:
-        description: User login.
-        tags:
-          - Users
-        requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - email
-                  - password
-                properties:
-                  email:
-                    type: string
-                    format: email
-                    maxLength: 255
-                    example: "jean.dupont@example.com"
-                  password:
-                    type: string
-                    minLength: 8
-                    maxLength: 50
-                    example: "Password123!"
-        responses:
-          "200":
-            description: User logged in successfully! Access and refresh tokens are included in the response.
-          "401":
-            description: Invalid email or password.
-          "403":
-            description: |
-              Forbidden:
-              - The account has been suspended.
-              - The email address has not been verified.
-              - A password reset request has been made, but it hasn't been finalized.
-              - The user is already logged in.
-          "422":
-            description: |
-              Unprocessable Content - The provided inputs failed validation.  
-              Please ensure all required fields are correctly filled and meet the validation criteria.
-          "500":
-            description: |
-              Internal server error:
-              - Internal server error.
-              - An error occurred while accessing the database. Please try again later.
+    post:
+      description: User login.
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 255
+                  example: "jean.dupont@example.com"
+                password:
+                  type: string
+                  minLength: 8
+                  maxLength: 50
+                  example: "Password123!"
+      responses:
+        "200":
+          description: User logged in successfully! Access and refresh tokens are included in the response.
+        "401":
+          description: Invalid email or password.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+            - The email address has not been verified.
+            - A password reset request has been made, but it hasn't been finalized.
+            - The user is already logged in.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
 
   #!_______________________________________________________________________________________________________
 
@@ -273,12 +273,13 @@ paths:
         "401":
           description: |
             Unauthorized:
-            - The access token has expired.
-            - The access token is invalid.
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
         "403":
           description: |
             Forbidden:
-            - Access denied: You do not have the necessary permissions to perform this action.
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
         "404":
           description: Logged in user not found.
         "422":
@@ -316,19 +317,20 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Successful response with a list of paginated users.
         "400":
           description: Authorization token is missing or invalid format.
         "401":
           description: |
             Unauthorized:
-            - The access token has expired.
-            - The access token is invalid.
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
         "403":
           description: |
             Forbidden:
-            - Access denied: You do not have the necessary permissions to perform this action.
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
         "404":
           description: Logged in user not found.
         "500":
@@ -347,30 +349,72 @@ paths:
         - bearerAuth: []
       description: Get user data by Id.
       parameters:
-        - in : params
+        - in: params
           name: userId
           schema:
             type: string
           description: User's Id (Required)
       responses:
-        '200':
+        "200":
           description: Successful response with user's data.
         "400":
           description: Authorization token is missing or invalid format.
         "401":
           description: |
             Unauthorized:
-            - The access token has expired.
-            - The access token is invalid.
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
         "403":
           description: |
             Forbidden:
-            - Access denied: You do not have the necessary permissions to perform this action.
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
         "404":
           description: |
             Not Found: 
             - Logged in user not found.
             - Requested user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/refresh-token/{refreshToken}:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Refresh user's access token.
+      parameters:
+        - in: params
+          name: refreshToken
+          schema:
+            type: string
+          description: User's refresh token (Required)
+      responses:
+        "200":
+          description: Successful response with new access token and new refresh token.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+            - The refresh token has expired. Authentication required.
+            - The refresh token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
         "500":
           description: |
             Internal server error:
