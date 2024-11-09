@@ -90,7 +90,7 @@ class RefreshUserAccessTokenController extends Controller
     {
         $this->globalRequestObject = $request;
 
-        $this->loggedInUser = $this->globalRequestObject->get('loggedInUser');
+        $this->loggedInUser = $request->get('loggedInUser');
 
         $this->checkRefreshTokenValidity();
 

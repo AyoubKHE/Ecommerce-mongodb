@@ -382,6 +382,39 @@ paths:
 
   #!_______________________________________________________________________________________________________
 
+  /api/users/get-my-account:
+    get:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Get logged in user data.
+      responses:
+        "200":
+          description: Successful response with user's data.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
   /api/users/refresh-token/{refreshToken}:
     get:
       tags:

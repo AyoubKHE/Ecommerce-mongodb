@@ -7,6 +7,7 @@ use App\Http\Controllers\Users\UserLoginController;
 use App\Http\Controllers\Users\UserCreationController;
 use App\Http\Controllers\Users\GetPaginatedUsersController;
 use App\Http\Controllers\Users\GetUserByIdController;
+use App\Http\Controllers\Users\GetMyAccountController;
 use App\Http\Controllers\Users\RefreshUserAccessTokenController;
 use App\Http\Controllers\Users\SendEmailVerificationLinkController;
 use App\Http\Controllers\Users\UserEmailVerificationController;
@@ -52,6 +53,14 @@ Route::get(
     ->name('users.get-by-id')
     ->middleware('JWTAuth')
     ->middleware('CheckAuthorization:users');
+
+
+Route::get(
+    '/users/get-my-account',
+    GetMyAccountController::class
+)
+    ->name('users.get-my-account')
+    ->middleware('JWTAuth');
 
 
 Route::get(

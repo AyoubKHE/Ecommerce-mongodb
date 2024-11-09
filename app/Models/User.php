@@ -64,4 +64,11 @@ class User extends Model
         );
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($model) {
+            $model->updatedAt = null;
+        });
+    }
+
 }
