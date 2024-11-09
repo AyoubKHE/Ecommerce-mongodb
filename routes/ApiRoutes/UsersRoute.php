@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Users\FirstAdminRegistrationController;
@@ -6,6 +7,7 @@ use App\Http\Controllers\Users\UserLoginController;
 use App\Http\Controllers\Users\UserCreationController;
 use App\Http\Controllers\Users\GetPaginatedUsersController;
 use App\Http\Controllers\Users\GetUserByIdController;
+use App\Http\Controllers\Users\RefreshUserAccessTokenController;
 use App\Http\Controllers\Users\SendEmailVerificationLinkController;
 use App\Http\Controllers\Users\UserEmailVerificationController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
@@ -45,7 +47,15 @@ Route::get(
     '/users/get-by-id/{userId}',
     GetUserByIdController::class
 )
-    ->name('users.email-verification')
+    ->name('users.get-by-id')
+    ->middleware('JWTAuth');
+
+
+Route::get(
+    '/users/refresh-token/{refreshToken}',
+    RefreshUserAccessTokenController::class
+)
+    ->name('users.refresh-token')
     ->middleware('JWTAuth');
 
 
