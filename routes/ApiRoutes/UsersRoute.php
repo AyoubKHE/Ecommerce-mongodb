@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Users\ActivateUserByIdController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Users\SuperAdminRegistrationController;
@@ -75,6 +76,15 @@ Route::get(
 Route::put(
     '/users/suspend-by-id/{userId}',
     SuspendUserByIdController::class
+)
+    ->name('users.create')
+    ->middleware('JWTAuth')
+    ->middleware('SuperAdminAuthorization');
+
+
+Route::put(
+    '/users/activate-by-id/{userId}',
+    ActivateUserByIdController::class
 )
     ->name('users.create')
     ->middleware('JWTAuth')
