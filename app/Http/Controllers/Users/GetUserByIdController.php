@@ -10,7 +10,6 @@ use App\Http\Controllers\Controller;
 class GetUserByIdController extends Controller
 {
     private Request $globalRequestObject;
-    private User|null $loggedInUser;
     private User|null $requestedUser;
 
     private function loadRequestedUser()

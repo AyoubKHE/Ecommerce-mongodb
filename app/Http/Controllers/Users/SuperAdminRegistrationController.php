@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\Users\FirstAdminRegistrationRequest;
 
-class FirstAdminRegistrationController extends Controller
+class SuperAdminRegistrationController extends Controller
 {
     private FirstAdminRegistrationRequest $globalRequestObject;
     private array $user;
@@ -59,7 +59,7 @@ class FirstAdminRegistrationController extends Controller
 
         $this->user['refreshToken'] = null;
 
-        $this->user['role'] = "Admin";
+        $this->user['role'] = "Super Admin";
 
         $this->user['permissions'] = null;
 
@@ -72,8 +72,6 @@ class FirstAdminRegistrationController extends Controller
         $this->user['updatedBy'] = null;
 
         $this->user['deletedBy'] = null;
-
-
     }
 
     private function storeUserProfileImage(): void
@@ -114,7 +112,7 @@ class FirstAdminRegistrationController extends Controller
         }
     }
 
-    private function isFirstAdmin(): void
+    private function isSuperAdmin(): void
     {
         try {
             $usersCount = User::count();
@@ -123,7 +121,7 @@ class FirstAdminRegistrationController extends Controller
         }
 
         if ($usersCount > 0) {
-            throw new Exception('Access denied. Only the first admin can register through this endpoint.', 403);
+            throw new Exception('Access denied. Only the super admin can register through this endpoint.', 403);
         }
     }
 
@@ -132,7 +130,7 @@ class FirstAdminRegistrationController extends Controller
     {
         $this->globalRequestObject = $request;
 
-        $this->isFirstAdmin();
+        $this->isSuperAdmin();
 
         $this->preparingData();
 
@@ -148,7 +146,7 @@ class FirstAdminRegistrationController extends Controller
             });
 
             return response()->json([
-                'message' => 'User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.',
+                'message' => 'Super Admin account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.',
                 'user' => $this->storedUser,
             ], 201);
 

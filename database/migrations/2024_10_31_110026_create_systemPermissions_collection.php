@@ -17,17 +17,6 @@ return new class extends Migration {
 
             SystemPermission::insert([
                 [
-                    'name' => 'Utilisateurs',
-                    'options' => array(
-                        ['name' => 'Rien', 'value' => 0],
-                        ['name' => 'Lire', 'value' => 1],
-                        ['name' => 'Créer', 'value' => 2],
-                        ['name' => 'Mettre à jour', 'value' => 4],
-                        ['name' => 'Supprimer', 'value' => 8],
-                        ['name' => 'Toutes', 'value' => -1],
-                    ),
-                ],
-                [
                     'name' => 'Produits',
                     'options' => array(
                         ['name' => 'Rien', 'value' => 0],

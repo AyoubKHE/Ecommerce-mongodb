@@ -11,9 +11,9 @@ components:
       bearerFormat: JWT
 
 paths:
-  /api/users/first-admin-registration:
+  /api/users/super-admin-registration:
     post:
-      description: First admin registration.
+      description: Super admin registration.
       tags:
         - Users
       requestBody:
@@ -94,11 +94,11 @@ paths:
                   format: binary
       responses:
         "201":
-          description: User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
+          description: Super Admin account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
         "403":
           description: |
             Forbidden:
-            - Access denied. Only the first admin can register through this endpoint.
+            - Access denied. Only the super admin can register through this endpoint.
         "422":
           description: |
             Unprocessable Content - The provided inputs failed validation.  
@@ -164,7 +164,7 @@ paths:
 
   /api/users/create:
     post:
-      description: Allows an admin or any authorized user to create a new user account.
+      description: Allows super admin to create a new user account.
       tags:
         - Users
       security:
@@ -448,6 +448,48 @@ paths:
           description: |
             Not Found: 
             - Logged in user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/suspend-by-id/{userId}:
+    put:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Allows super admin to suspend user's account.
+      parameters:
+        - in: params
+          name: userId
+          schema:
+            type: string
+          description: User's Id (Required)
+      responses:
+        "200":
+          description: User suspended successfully.
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
+            - Requested user already suspended.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
+            - Requested user not found.
         "500":
           description: |
             Internal server error:

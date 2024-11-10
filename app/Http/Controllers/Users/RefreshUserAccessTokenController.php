@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class RefreshUserAccessTokenController extends Controller
 {
     private Request $globalRequestObject;
-    private User|null $loggedInUser;
+    private User $loggedInUser;
 
     private function prepareRefreshToken(): string
     {
@@ -32,12 +32,12 @@ class RefreshUserAccessTokenController extends Controller
         $this->loggedInUser->refreshToken = Hash::make($refreshToken);
 
         try {
-            $updated = $this->loggedInUser->save();
+            $isUpdated = $this->loggedInUser->save();
         } catch (Throwable $throwable) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
 
-        if (!$updated) {
+        if (!$isUpdated) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
 

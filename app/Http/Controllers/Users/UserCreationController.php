@@ -53,10 +53,6 @@ class UserCreationController extends Controller
             "lastName" => $loggedInUser->lastName,
             "username" => $loggedInUser->username,
             "email" => $loggedInUser->email,
-            "role" => $loggedInUser->role,
-            "permissions" => $loggedInUser->role === "Admin"
-                ? null
-                : $loggedInUser->permissions
         ];
     }
 

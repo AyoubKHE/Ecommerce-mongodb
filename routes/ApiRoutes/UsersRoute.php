@@ -2,23 +2,24 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Users\FirstAdminRegistrationController;
+use App\Http\Controllers\Users\SuperAdminRegistrationController;
 use App\Http\Controllers\Users\UserLoginController;
 use App\Http\Controllers\Users\UserCreationController;
 use App\Http\Controllers\Users\GetPaginatedUsersController;
 use App\Http\Controllers\Users\GetUserByIdController;
 use App\Http\Controllers\Users\GetMyAccountController;
 use App\Http\Controllers\Users\RefreshUserAccessTokenController;
-use App\Http\Controllers\Users\SendEmailVerificationLinkController;
-use App\Http\Controllers\Users\UserEmailVerificationController;
-use App\Http\Controllers\Users\UserForgetPasswordController;
+use App\Http\Controllers\Users\SuspendUserByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
+use App\Http\Controllers\Users\UserForgetPasswordController;
+use App\Http\Controllers\Users\UserEmailVerificationController;
+use App\Http\Controllers\Users\SendEmailVerificationLinkController;
 
 Route::post(
-    '/users/first-admin-registration',
-    FirstAdminRegistrationController::class
+    '/users/super-admin-registration',
+    SuperAdminRegistrationController::class
 )
-    ->name('users.first-admin-registration');
+    ->name('users.super-admin-registration');
 
 
 Route::post(
@@ -34,7 +35,7 @@ Route::post(
 )
     ->name('users.create')
     ->middleware('JWTAuth')
-    ->middleware('CheckAuthorization:users');
+    ->middleware('SuperAdminAuthorization');
 
 
 Route::get(
@@ -43,7 +44,7 @@ Route::get(
 )
     ->name('users.get-paginated-users')
     ->middleware('JWTAuth')
-    ->middleware('CheckAuthorization:users');
+    ->middleware('SuperAdminAuthorization');
 
 
 Route::get(
@@ -52,7 +53,7 @@ Route::get(
 )
     ->name('users.get-by-id')
     ->middleware('JWTAuth')
-    ->middleware('CheckAuthorization:users');
+    ->middleware('SuperAdminAuthorization');
 
 
 Route::get(
@@ -69,6 +70,15 @@ Route::get(
 )
     ->name('users.refresh-token')
     ->middleware('JWTAuth');
+
+
+Route::put(
+    '/users/suspend-by-id/{userId}',
+    SuspendUserByIdController::class
+)
+    ->name('users.create')
+    ->middleware('JWTAuth')
+    ->middleware('SuperAdminAuthorization');
 
 
 Route::post(

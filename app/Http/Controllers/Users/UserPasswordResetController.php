@@ -27,12 +27,12 @@ class UserPasswordResetController extends Controller
         $this->updatedAt = now();
 
         try {
-            $updated = $this->user->save();
+            $isUpdated = $this->user->save();
         } catch (Throwable $throwable) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
 
-        if (!$updated) {
+        if (!$isUpdated) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
     }
