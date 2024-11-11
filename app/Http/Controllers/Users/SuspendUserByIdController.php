@@ -56,6 +56,10 @@ class SuspendUserByIdController extends Controller
             throw new Exception('Requested user not found.', 404);
         }
 
+        if ($this->requestedUser->role === "Super Admin") {
+            throw new Exception('Super Admin accounts cannot be suspended.', 403);
+        }
+
         if (!$this->requestedUser->isActive) {
             throw new Exception('Requested user already suspended.', 403);
         }

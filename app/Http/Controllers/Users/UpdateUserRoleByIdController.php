@@ -96,6 +96,10 @@ class UpdateUserRoleByIdController extends Controller
             throw new Exception('Requested user not found.', 404);
         }
 
+        if ($this->requestedUser->role === "Super Admin") {
+            throw new Exception("Super Admin accounts'role cannot be updated.", 403);
+        }
+
         if (!$this->requestedUser->isActive) {
             throw new Exception('Requested user is suspended.', 403);
         }
