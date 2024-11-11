@@ -631,7 +631,7 @@ paths:
             - The logged in user has been suspended.
             - Access denied: User do not have the necessary permissions to perform this action.
             - Requested user is suspended.
-            - Super Admin accounts'role cannot be updated.
+            - Super Admin account's role cannot be updated.
         "404":
           description: |
             Not Found: 
