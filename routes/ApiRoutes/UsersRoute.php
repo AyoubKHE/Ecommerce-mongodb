@@ -13,6 +13,7 @@ use App\Http\Controllers\Users\RefreshUserAccessTokenController;
 use App\Http\Controllers\Users\SuspendUserByIdController;
 use App\Http\Controllers\Users\ActivateUserByIdController;
 use App\Http\Controllers\Users\UpdateUserRoleByIdController;
+use App\Http\Controllers\Users\DeleteUserByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
 use App\Http\Controllers\Users\UserEmailVerificationController;
@@ -106,6 +107,15 @@ Route::put(
     UpdateUserRoleByIdController::class
 )
     ->name('users.update-role')
+    ->middleware('JWTAuth')
+    ->middleware('SuperAdminAuthorization');
+
+
+Route::delete(
+    '/users/delete-by-id/{userId}',
+    DeleteUserByIdController::class
+)
+    ->name('users.delete-by-id')
     ->middleware('JWTAuth')
     ->middleware('SuperAdminAuthorization');
 

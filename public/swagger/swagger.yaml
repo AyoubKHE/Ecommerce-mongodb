@@ -583,6 +583,12 @@ paths:
       security:
         - bearerAuth: []
       description: Allows super admin to update user's role.
+      parameters:
+        - in: params
+          name: userId
+          schema:
+            type: string
+          description: User's Id (Required)
       requestBody:
         required: true
         content:
@@ -632,6 +638,48 @@ paths:
             - Access denied: User do not have the necessary permissions to perform this action.
             - Requested user is suspended.
             - Super Admin account's role cannot be updated.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
+            - Requested user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/delete-by-id/{userId}:
+    delete:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Allows super admin to delete user's account.
+      parameters:
+        - in: params
+          name: userId
+          schema:
+            type: string
+          description: User's Id (Required)
+      responses:
+        "200":
+          description: User deleted successfully!
+        "400":
+          description: Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
+            - Super Admin account cannot be deleted.
         "404":
           description: |
             Not Found: 
