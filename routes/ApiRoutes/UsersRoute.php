@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Users\ActivateUserByIdController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Users\SuperAdminRegistrationController;
@@ -11,6 +10,8 @@ use App\Http\Controllers\Users\GetUserByIdController;
 use App\Http\Controllers\Users\GetMyAccountController;
 use App\Http\Controllers\Users\RefreshUserAccessTokenController;
 use App\Http\Controllers\Users\SuspendUserByIdController;
+use App\Http\Controllers\Users\ActivateUserByIdController;
+use App\Http\Controllers\Users\UpdateUserRoleByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
 use App\Http\Controllers\Users\UserEmailVerificationController;
@@ -77,7 +78,7 @@ Route::put(
     '/users/suspend-by-id/{userId}',
     SuspendUserByIdController::class
 )
-    ->name('users.create')
+    ->name('users.suspend-by-id')
     ->middleware('JWTAuth')
     ->middleware('SuperAdminAuthorization');
 
@@ -86,7 +87,16 @@ Route::put(
     '/users/activate-by-id/{userId}',
     ActivateUserByIdController::class
 )
-    ->name('users.create')
+    ->name('users.activate-by-id')
+    ->middleware('JWTAuth')
+    ->middleware('SuperAdminAuthorization');
+
+
+Route::put(
+    '/users/update-role/{userId}',
+    UpdateUserRoleByIdController::class
+)
+    ->name('users.update-role')
     ->middleware('JWTAuth')
     ->middleware('SuperAdminAuthorization');
 

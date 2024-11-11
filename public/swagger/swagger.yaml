@@ -251,7 +251,7 @@ paths:
                   enum: ["Admin", "User"]
                   example: "User"
                 permissions:
-                  description: Permissions are required when role is "User"
+                  description: Permissions are required when role is "User" And prohibited when role is "Admin"
                   type: array
                   items:
                     type: object
@@ -261,10 +261,11 @@ paths:
                     properties:
                       name:
                         type: string
-                        example: "read"
+                        example: "Produits"
                       value:
                         type: integer
-                        example: 1
+                        description: 1 => Read products only, 2 => Create products only, 4 => Update products only, 8 => Delete products only, 3 => Read And Create products, 15 => Read, Create, Update, Delete products. for more inforamations search for "Binary Permissions".
+                        example: 1      
       responses:
         "201":
           description: User Account is created successfully. An email confirmation has been sent to the user. The confirmation link is valid for 15 minutes only.
@@ -527,6 +528,74 @@ paths:
             - The logged in user has been suspended.
             - Access denied: User do not have the necessary permissions to perform this action.
             - Requested user already activated.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
+            - Requested user not found.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+
+  #!_______________________________________________________________________________________________________
+
+  /api/users/update-role/{userId}:
+    put:
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      description: Allows super admin to update user's role.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum: ["Admin", "User"]
+                  example: "User"
+                permissions:
+                  description: Permissions are required when role is "User" And prohibited when role is "Admin"
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - name
+                      - value
+                    properties:
+                      name:
+                        type: string
+                        example: "Produits"
+                      value:
+                        type: integer
+                        description: 1 => Read products only, 2 => Create products only, 4 => Update products only, 8 => Delete products only, 3 => Read And Create products, 15 => Read, Create, Update, Delete products. for more inforamations search for "Binary Permissions".
+                        example: 1
+      responses:
+        "200":
+          description: User's role updated successfully.
+        "400":
+          description: |
+            Bad Request
+            - Authorization token is missing or invalid format.
+            - No updates were made. Please ensure there is at least one modification before submitting.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+            - Access denied: User do not have the necessary permissions to perform this action.
+            - Requested user is suspended.
         "404":
           description: |
             Not Found: 

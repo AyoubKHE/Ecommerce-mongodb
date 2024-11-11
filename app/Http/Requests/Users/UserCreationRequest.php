@@ -158,7 +158,7 @@ class UserCreationRequest extends FormRequest
             'permissions.*.name' => [
                 'required_with:permissions.*',
                 'string',
-                'regex:/^[a-zA-Z]+$/u',
+                'regex:/^[a-zA-ZÀ-ÿ\s]+$/u',
                 'distinct',
                 function ($attribute, $value, $fail) {
                     if (!in_array($value, $this->systemPermissions)) {

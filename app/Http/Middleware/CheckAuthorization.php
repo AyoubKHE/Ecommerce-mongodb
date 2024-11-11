@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Response;
 class CheckAuthorization
 {
     private $resourcesNamesInDatabaseMapping = [
-        "users" => "Utilisateurs",
         "products" => "Produits",
+        "productsCategories" => "Catégories Des Produits",
     ];
 
     private $operationsValues = [
