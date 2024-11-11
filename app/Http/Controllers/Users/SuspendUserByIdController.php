@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 class SuspendUserByIdController extends Controller
 {
     private Request $globalRequestObject;
-    private User $loggedInUser;
     private User|null $requestedUser;
 
     private function prepareUpdatedBy()

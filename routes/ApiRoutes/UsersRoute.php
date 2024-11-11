@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Users\SuperAdminRegistrationController;
 use App\Http\Controllers\Users\UserLoginController;
+use App\Http\Controllers\Users\UserLogoutController;
 use App\Http\Controllers\Users\UserCreationController;
 use App\Http\Controllers\Users\GetPaginatedUsersController;
 use App\Http\Controllers\Users\GetUserByIdController;
@@ -29,6 +30,14 @@ Route::post(
     UserLoginController::class
 )
     ->name('users.login');
+
+
+Route::get(
+    '/users/logout',
+    UserLogoutController::class
+)
+    ->name('users.logout')
+    ->middleware('JWTAuth');
 
 
 Route::post(
