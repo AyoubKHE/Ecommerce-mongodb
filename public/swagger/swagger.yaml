@@ -741,6 +741,59 @@ paths:
             Internal server error:
             - Internal server error.
             - An error occurred while accessing the database. Please try again later.
+  
+  #!_______________________________________________________________________________________________________
+
+  /api/users/update-my-account-image:
+    post:
+      description: Allows user to update his account's image.
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - profileImage
+              properties:
+                profileImage:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: User's account image updated successfully!
+        "400":
+          description: |
+            Bad Request
+            - Authorization token is missing or invalid format.
+        "401":
+          description: |
+            Unauthorized:
+            - The access token has expired. Please request a new access token using the refresh token.
+            - The access token is invalid. Authentication required.
+        "403":
+          description: |
+            Forbidden:
+            - The logged in user has been suspended.
+        "404":
+          description: |
+            Not Found: 
+            - Logged in user not found.
+        "422":
+          description: |
+            Unprocessable Content - The provided inputs failed validation.  
+            Please ensure all required fields are correctly filled and meet the validation criteria.
+        "500":
+          description: |
+            Internal server error:
+            - Internal server error.
+            - An error occurred while accessing the database. Please try again later.
+            - An error occurred while creating a backup of the old image.
+            - An error occurred while deleting the old image.
+            - An error occurred while saving the user's new profile image.
 
   #!_______________________________________________________________________________________________________
 

@@ -15,6 +15,7 @@ use App\Http\Controllers\Users\ActivateUserByIdController;
 use App\Http\Controllers\Users\UpdateUserRoleByIdController;
 use App\Http\Controllers\Users\UpdateMyAccountController;
 use App\Http\Controllers\Users\UpdateMyPasswordController;
+use App\Http\Controllers\Users\UpdateMyAccountImageController;
 use App\Http\Controllers\Users\DeleteUserByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
@@ -126,6 +127,14 @@ Route::put(
     UpdateMyPasswordController::class
 )
     ->name('users.update-my-password')
+    ->middleware('JWTAuth');
+
+
+Route::post(
+    '/users/update-my-account-image',
+    UpdateMyAccountImageController::class
+)
+    ->name('users.update-my-account-image')
     ->middleware('JWTAuth');
 
 
