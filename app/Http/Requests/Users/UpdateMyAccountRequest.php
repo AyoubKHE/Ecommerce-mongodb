@@ -2,12 +2,15 @@
 
 namespace App\Http\Requests\Users;
 
+use App\Models\User;
+use Illuminate\Validation\Rule;
+use App\Models\SystemPermission;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FirstAdminRegistrationRequest extends FormRequest
+class UpdateMyAccountRequest extends FormRequest
 {
 
-     /**
+    /**
      * Indicates if the validator should stop on the first rule failure.
      *
      * @var bool
@@ -31,7 +34,6 @@ class FirstAdminRegistrationRequest extends FormRequest
     {
         return [
             'firstName' => [
-                'required',
                 'string',
                 'min:3',
                 'max:30',
@@ -40,7 +42,6 @@ class FirstAdminRegistrationRequest extends FormRequest
 
 
             'lastName' => [
-                'required',
                 'string',
                 'min:3',
                 'max:30',
@@ -49,36 +50,42 @@ class FirstAdminRegistrationRequest extends FormRequest
 
 
             'username' => [
-                'required',
-                'unique:users',
                 'string',
                 'min:3',
                 'max:30',
-            ],
+                function ($attribute, $value, $fail) {
+                    $existingUser = User::where(
+                        'username',
+                        $value
+                    )->where(
+                            'id',
+                            '!=',
+                            $this->get('loggedInUser')->id
+                        )->first();
 
-
-            'email' => [
-                'required',
-                'unique:users',
-                'email',
-                'max:255'
-            ],
-
-
-            'password' => [
-                'required',
-                'string',
-                'min:1',
-                // 'min:8',
-                'max:50',
-                // 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#]).{8,30}$/'
+                    if ($existingUser) {
+                        $fail("The username has already been taken.");
+                    }
+                },
             ],
 
 
             'phone' => [
-                'required',
-                'unique:users',
                 'digits:10',
+                function ($attribute, $value, $fail) {
+                    $existingUser = User::where(
+                        'phone',
+                        $value
+                    )->where(
+                            'id',
+                            '!=',
+                            $this->get('loggedInUser')->id
+                        )->first();
+                        
+                    if ($existingUser) {
+                        $fail("The phone has already been taken.");
+                    }
+                },
             ],
 
 
@@ -113,17 +120,9 @@ class FirstAdminRegistrationRequest extends FormRequest
 
 
             'birthDate' => [
-                'required',
                 'date'
             ],
-
-
-            'profileImage' => [
-                'required',
-                'image',
-                'mimes:jpg,png,jpeg,svg',
-                'max:5000'
-            ],
         ];
+
     }
 }

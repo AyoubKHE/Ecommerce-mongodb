@@ -13,6 +13,7 @@ use App\Http\Controllers\Users\RefreshUserAccessTokenController;
 use App\Http\Controllers\Users\SuspendUserByIdController;
 use App\Http\Controllers\Users\ActivateUserByIdController;
 use App\Http\Controllers\Users\UpdateUserRoleByIdController;
+use App\Http\Controllers\Users\UpdateMyAccountController;
 use App\Http\Controllers\Users\DeleteUserByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
@@ -109,6 +110,14 @@ Route::put(
     ->name('users.update-role')
     ->middleware('JWTAuth')
     ->middleware('SuperAdminAuthorization');
+
+
+Route::put(
+    '/users/update-my-account',
+    UpdateMyAccountController::class
+)
+    ->name('users.update-my-account')
+    ->middleware('JWTAuth');
 
 
 Route::delete(

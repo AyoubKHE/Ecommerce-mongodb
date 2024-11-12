@@ -15,11 +15,11 @@ use App\Mail\UserEmailVerification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Requests\Users\FirstAdminRegistrationRequest;
+use App\Http\Requests\Users\SuperAdminRegistrationRequest;
 
 class SuperAdminRegistrationController extends Controller
 {
-    private FirstAdminRegistrationRequest $globalRequestObject;
+    private SuperAdminRegistrationRequest $globalRequestObject;
     private array $user;
     private User|null $storedUser;
     private bool $isUserImageFolderCreated = false;
@@ -126,7 +126,7 @@ class SuperAdminRegistrationController extends Controller
     }
 
 
-    public function __invoke(FirstAdminRegistrationRequest $request): JsonResponse
+    public function __invoke(SuperAdminRegistrationRequest $request): JsonResponse
     {
         $this->globalRequestObject = $request;
 
