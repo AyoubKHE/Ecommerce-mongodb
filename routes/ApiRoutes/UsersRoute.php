@@ -14,6 +14,7 @@ use App\Http\Controllers\Users\SuspendUserByIdController;
 use App\Http\Controllers\Users\ActivateUserByIdController;
 use App\Http\Controllers\Users\UpdateUserRoleByIdController;
 use App\Http\Controllers\Users\UpdateMyAccountController;
+use App\Http\Controllers\Users\UpdateMyPasswordController;
 use App\Http\Controllers\Users\DeleteUserByIdController;
 use App\Http\Controllers\Users\UserPasswordResetController;
 use App\Http\Controllers\Users\UserForgetPasswordController;
@@ -117,6 +118,14 @@ Route::put(
     UpdateMyAccountController::class
 )
     ->name('users.update-my-account')
+    ->middleware('JWTAuth');
+
+
+Route::put(
+    '/users/update-my-password',
+    UpdateMyPasswordController::class
+)
+    ->name('users.update-my-password')
     ->middleware('JWTAuth');
 
 

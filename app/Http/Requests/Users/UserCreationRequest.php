@@ -16,7 +16,7 @@ class UserCreationRequest extends FormRequest
      */
     protected $stopOnFirstFailure = true;
 
-    protected $systemPermissions;
+    private $systemPermissions;
 
     public function __construct()
     {
