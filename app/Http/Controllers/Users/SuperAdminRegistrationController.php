@@ -22,7 +22,6 @@ class SuperAdminRegistrationController extends Controller
     private SuperAdminRegistrationRequest $globalRequestObject;
     private array $user;
     private User|null $storedUser;
-    private bool $isUserImageFolderCreated = false;
     private string $emailVerificationToken;
 
 
@@ -84,8 +83,6 @@ class SuperAdminRegistrationController extends Controller
             throw new Exception("An error occurred while saving the user's profile image.", 500);
         }
 
-        $this->isUserImageFolderCreated = true;
-
         unset($this->user["profileImage"]);
     }
 
@@ -134,11 +131,11 @@ class SuperAdminRegistrationController extends Controller
 
         $this->preparingData();
 
+        $this->storeUserProfileImage();
+
         try {
 
             DB::transaction(function () {
-
-                $this->storeUserProfileImage();
 
                 $this->storeUser();
 
@@ -152,9 +149,7 @@ class SuperAdminRegistrationController extends Controller
 
         } catch (Throwable $throwable) {
 
-            if ($this->isUserImageFolderCreated) {
-                Storage::deleteDirectory("public/users/id_" . $this->user['_id']->__toString());
-            }
+            Storage::deleteDirectory("public/users/id_" . $this->user['_id']->__toString());
 
             throw $throwable;
         }
