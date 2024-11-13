@@ -41,6 +41,11 @@ class UpdateMyAccountImageController extends Controller
         if (!$isUpdated) {
             throw new Exception('An error occurred while accessing the database. Please try again later.', 500);
         }
+
+        BackupService::deleteImagesBackup(
+            "users",
+            $this->loggedInUser->id
+        );
     }
 
     private function storeTheNewImageOnDisk()
@@ -64,6 +69,12 @@ class UpdateMyAccountImageController extends Controller
                 )
             )
         ) {
+
+            BackupService::deleteImagesBackup(
+                "users",
+                $this->loggedInUser->id
+            );
+
             throw new Exception(
                 'An error occurred while deleting the old image.',
                 500
@@ -75,7 +86,15 @@ class UpdateMyAccountImageController extends Controller
 
         $this->loggedInUser->profileImagePath = $imageFile->store($folderPath, 'public');
         if (!$this->loggedInUser->profileImagePath) {
-            throw new Exception("An error occurred while saving the user's new profile image.", 500);
+            BackupService::makeImagesRestoration(
+                "users",
+                $this->loggedInUser->id
+            );
+
+            throw new Exception(
+                "An error occurred while saving the user's new profile image.",
+                500
+            );
         }
     }
 
@@ -89,11 +108,6 @@ class UpdateMyAccountImageController extends Controller
 
         try {
             $this->updateProfileImagePathFieldInDatabase();
-
-            BackupService::deleteImagesBackup(
-                "users",
-                $this->loggedInUser->id
-            );
 
             return response()->json([
                 'message' => "User's account image updated successfully!",
