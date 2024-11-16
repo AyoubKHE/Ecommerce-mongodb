@@ -17,8 +17,4 @@ class SystemPermission extends Model
         "name",
         "options",
     ];
-
-    protected $casts = [
-        "options" => "array",
-    ];
 }

@@ -165,7 +165,7 @@ class UserSeeder extends Seeder
                 '_id' => $this->_id,
                 'firstName' => 'Ayoub',
                 'lastName' => 'Kheyar',
-                'username' => 'a',
+                'username' => 'aykhe',
                 'email' => 'ayoub.kheyar06@gmail.com',
                 'password' => Hash::make("a"),
                 'phone' => '05 55 55 55 55',

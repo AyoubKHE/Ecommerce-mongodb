@@ -77,6 +77,10 @@ class UserCreationController extends Controller
 
         $this->preparedUser['lastLogin'] = null;
 
+        $this->preparedUser['createdAt'] = now();
+        
+        $this->preparedUser['updatedAt'] = null;
+        
         $this->preparedUser['deletedAt'] = null;
 
         $this->prepareCreatedBy();

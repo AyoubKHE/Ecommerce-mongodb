@@ -12,9 +12,9 @@ class User extends Model
 {
     use HasFactory, SoftDeletes;
 
-    const CREATED_AT = 'createdAt';
-    const UPDATED_AT = 'updatedAt';
     const DELETED_AT = 'deletedAt';
+
+    public $timestamps = false;
 
     protected $table = 'users';
 
@@ -36,6 +36,8 @@ class User extends Model
         "role",
         "permissions",
         "lastLogin",
+        "createdAt",
+        "updatedAt",
         "deletedAt",
         "createdBy",
         "updatedBy",
@@ -62,13 +64,6 @@ class User extends Model
         return Attribute::make(
             get: fn(string $value): string => Carbon::parse($value)->timezone('Africa/Algiers')->toDateTimeString()
         );
-    }
-
-    protected static function booted()
-    {
-        static::creating(function ($model) {
-            $model->updatedAt = null;
-        });
     }
 
 }
